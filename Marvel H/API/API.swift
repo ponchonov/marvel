@@ -100,4 +100,41 @@ class API: NSObject {
             }
         }
     }
+    
+    public func getComics(characterId:Int, completion: @escaping ([Comic],_ error: Error?) -> Void) {
+        guard let url = URL(string: "\(baseURL)/comics")
+                  else {
+                      let error = NSError(domain: "", code: -100, userInfo: [:])
+                      completion([], error)
+                      return
+              }
+              
+              var request = mutableRequest(url: url)
+              request.httpMethod = "GET"
+              
+              let parameters = [
+                "characters":"\(characterId)",
+                  "apikey": apiKey
+              ]
+              
+              apiCallWith(request: request, parameters: parameters) { (data, response, error) in
+                  
+                  if (error != nil) {
+                      print(error ?? " ")
+                      completion([], error)
+                  } else {
+                      do {
+                          let decoder = JSONDecoder()
+                          guard let data = data else {return}
+                          let responseObject =  try decoder.decode(ResponseComics.self, from: data)
+                        
+                          let characters = responseObject.data.results
+                          
+                          completion(characters, nil)
+                      } catch let e {
+                          completion([], e)
+                      }
+                  }
+              }
+    }
 }

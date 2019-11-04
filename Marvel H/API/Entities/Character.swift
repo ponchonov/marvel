@@ -30,7 +30,6 @@ struct Character: Codable {
     var name: String
     var description: String
     var thumbnail: Thumbnail
-    var comics: ComicData
 }
 
 struct Thumbnail: Codable {
@@ -38,13 +37,4 @@ struct Thumbnail: Codable {
     
 }
 
-struct ComicData: Codable {
-    var available: Int
-    var collectionURI: String
-    var items: [Comic]
-}
 
-struct Comic: Codable {
-    var resourceURI : URL
-    var name : String
-}

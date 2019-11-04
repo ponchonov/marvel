@@ -66,6 +66,7 @@ class MarvelImageView: UIView {
     }
     
     func setImageWith(imageUrl:URL) {
+        self.image = nil
         self.activityIndicator.stopAnimating()
 
         let key = imageUrl.lastPathComponent
