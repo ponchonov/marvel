@@ -24,6 +24,7 @@ class CharacterDetailViewController: UIViewController {
         c.translatesAutoresizingMaskIntoConstraints = false
         c.register(ComicCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         c.dataSource = self
+        c.backgroundColor = .white
         return c
     }()
     
@@ -67,7 +68,6 @@ class CharacterDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
     let character:Character

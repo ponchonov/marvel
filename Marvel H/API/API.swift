@@ -17,6 +17,8 @@ class API: NSObject {
         super.init()
     }
     
+    var currentPage = 0
+
     private func mutableRequest(url:URL) -> URLRequest {
         
         let headers = [
@@ -73,11 +75,18 @@ class API: NSObject {
         var request = mutableRequest(url: url)
         request.httpMethod = "GET"
         
-        let parameters = [
+        var parameters = [
             "limit":"\(heroesPerPage)",
             "apikey": apiKey,
             "orderBy":"name"
         ]
+        
+        if nextPage {
+            currentPage = currentPage + 1
+            parameters["offset"] = "\(currentPage * heroesPerPage)"
+            
+            print("current page:", currentPage)
+        }
         
         apiCallWith(request: request, parameters: parameters) { (data, response, error) in
             

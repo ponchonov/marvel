@@ -12,6 +12,8 @@ class CharactersViewController: UIViewController {
 
     let cellIdentifier = "characterCell"
     var characters:[Character] = [Character]()
+    var isDataLoading = true
+    
     
     lazy var collectionView:UICollectionView = {
         let l = UICollectionViewFlowLayout()
@@ -25,6 +27,8 @@ class CharactersViewController: UIViewController {
         c.register(CharacterCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         c.dataSource = self
         c.delegate = self
+        c.backgroundColor = .white
+
         return c
     }()
     
@@ -45,6 +49,7 @@ class CharactersViewController: UIViewController {
             self.characters = heroes
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
+                self.isDataLoading = false
             }
         }
     }
@@ -64,6 +69,22 @@ class CharactersViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffsetY = scrollView.contentOffset.y
+        if contentOffsetY >= (scrollView.contentSize.height - scrollView.bounds.height) - 40 /* Needed offset */ {
+            guard !self.isDataLoading else { return }
+            self.isDataLoading = true
+            
+            API.shared.getHeroes(heroesPerPage: 10, nextPage: true) { (characters, error) in
+                self.characters.append(contentsOf: characters)
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                    self.isDataLoading = false
+                }
+            }
+        }
     }
 }
 
