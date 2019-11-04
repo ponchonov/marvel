@@ -16,5 +16,17 @@ class ViewController: UIViewController {
     }
 
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        setUpView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setUpView()  {
+        self.view.backgroundColor = .white
+    }
 }
 
