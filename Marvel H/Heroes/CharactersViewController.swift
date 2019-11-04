@@ -35,6 +35,13 @@ class CharactersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        API.shared.getHeroes(heroesPerPage: UIDevice.current.userInterfaceIdiom == .pad ? 20:10) { (heroes, error) in
+            self.characters = heroes
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                self.isDataLoading = false
+            }
+        }
     }
 
 
@@ -44,14 +51,9 @@ class CharactersViewController: UIViewController {
         self.title = "Heroes"
     }
     override func viewDidAppear(_ animated: Bool) {
-    
-        API.shared.getHeroes(heroesPerPage: 10) { (heroes, error) in
-            self.characters = heroes
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-                self.isDataLoading = false
-            }
-        }
+    setupLayout()
+
+        
     }
     
     required init?(coder: NSCoder) {
@@ -85,6 +87,32 @@ class CharactersViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    func setupLayout()  {
+        
+        var itemSize:CGSize?
+        var numberOfColumns:CGFloat = 1
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            numberOfColumns = 3
+            if (UIDevice.current.orientation.isLandscape && UIDevice.current.userInterfaceIdiom == .pad ){
+                numberOfColumns = 5
+            }
+        }
+        itemSize = CGSize(width: UIScreen.main.bounds.width/numberOfColumns - 10 , height: 500)
+
+        let l = UICollectionViewFlowLayout()
+        
+        l.itemSize = itemSize!
+        l.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        
+        self.collectionView.collectionViewLayout.invalidateLayout()
+        self.collectionView.collectionViewLayout = l
+        self.collectionView.reloadData()
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        setupLayout()
     }
 }
 

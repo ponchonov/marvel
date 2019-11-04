@@ -46,6 +46,9 @@ class CharacterDetailViewController: UIViewController {
     
     lazy var characterName:UILabel = {
         let l = UILabel()
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            l.font = UIFont.systemFont(ofSize: 36)
+        }
         l.translatesAutoresizingMaskIntoConstraints = false
         
         return l
@@ -62,6 +65,9 @@ class CharacterDetailViewController: UIViewController {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
         l.numberOfLines = 0
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            l.font = UIFont.systemFont(ofSize: 26)
+        }
         return l
     }()
     

@@ -18,7 +18,7 @@ class API: NSObject {
     }
     
     var currentPage = 0
-
+    
     private func mutableRequest(url:URL) -> URLRequest {
         
         let headers = [
@@ -64,7 +64,9 @@ class API: NSObject {
     }
     
     public func getHeroes(heroesPerPage:Int, nextPage:Bool = false, completion: @escaping ([Character],_ error: Error?) -> Void) {
-        
+        if currentPage < 0 {
+            currentPage = 0
+        }
         guard let url = URL(string: "\(baseURL)/characters")
             else {
                 let error = NSError(domain: "", code: -100, userInfo: [:])
@@ -91,6 +93,7 @@ class API: NSObject {
         apiCallWith(request: request, parameters: parameters) { (data, response, error) in
             
             if (error != nil) {
+                self.currentPage = self.currentPage - 1
                 print(error ?? " ")
                 completion([], error)
             } else {
@@ -104,6 +107,7 @@ class API: NSObject {
                     
                     completion(characters, nil)
                 } catch let e {
+                    self.currentPage = self.currentPage - 1
                     completion([], e)
                 }
             }
@@ -112,38 +116,38 @@ class API: NSObject {
     
     public func getComics(characterId:Int, completion: @escaping ([Comic],_ error: Error?) -> Void) {
         guard let url = URL(string: "\(baseURL)/comics")
-                  else {
-                      let error = NSError(domain: "", code: -100, userInfo: [:])
-                      completion([], error)
-                      return
-              }
-              
-              var request = mutableRequest(url: url)
-              request.httpMethod = "GET"
-              
-              let parameters = [
-                "characters":"\(characterId)",
-                  "apikey": apiKey
-              ]
-              
-              apiCallWith(request: request, parameters: parameters) { (data, response, error) in
-                  
-                  if (error != nil) {
-                      print(error ?? " ")
-                      completion([], error)
-                  } else {
-                      do {
-                          let decoder = JSONDecoder()
-                          guard let data = data else {return}
-                          let responseObject =  try decoder.decode(ResponseComics.self, from: data)
-                        
-                          let characters = responseObject.data.results
-                          
-                          completion(characters, nil)
-                      } catch let e {
-                          completion([], e)
-                      }
-                  }
-              }
+            else {
+                let error = NSError(domain: "", code: -100, userInfo: [:])
+                completion([], error)
+                return
+        }
+        
+        var request = mutableRequest(url: url)
+        request.httpMethod = "GET"
+        
+        let parameters = [
+            "characters":"\(characterId)",
+            "apikey": apiKey
+        ]
+        
+        apiCallWith(request: request, parameters: parameters) { (data, response, error) in
+            
+            if (error != nil) {
+                print(error ?? " ")
+                completion([], error)
+            } else {
+                do {
+                    let decoder = JSONDecoder()
+                    guard let data = data else {return}
+                    let responseObject =  try decoder.decode(ResponseComics.self, from: data)
+                    
+                    let characters = responseObject.data.results
+                    
+                    completion(characters, nil)
+                } catch let e {
+                    completion([], e)
+                }
+            }
+        }
     }
 }
