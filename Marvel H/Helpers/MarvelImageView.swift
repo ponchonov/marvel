@@ -70,9 +70,9 @@ class MarvelImageView: UIView {
     
     var imageURLString: String?
     
-    func downloadImageFrom(urlImage: URL, imageMode: UIView.ContentMode) {
+    func downloadImageFrom(thumbnail: Thumbnail, imageMode: UIView.ContentMode) {
         
-        let url = urlImage.appendingPathComponent("portrait_xlarge.jpg")
+        let url = thumbnail.path.appendingPathComponent("portrait_xlarge.\(thumbnail.ext)")
         
         self.activityIndicator.startAnimating()
         self.image = nil

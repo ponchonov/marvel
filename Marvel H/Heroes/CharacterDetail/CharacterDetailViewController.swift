@@ -145,7 +145,7 @@ class CharacterDetailViewController: UIViewController {
                ])
         
         characterName.text = character.name
-        characterImage.downloadImageFrom(urlImage: character.thumbnail.path, imageMode: .scaleAspectFit)
+        characterImage.downloadImageFrom(thumbnail: character.thumbnail, imageMode: .scaleAspectFit)
         characterDescription.text = character.description != "" ? character.description:"No description"
         
     }

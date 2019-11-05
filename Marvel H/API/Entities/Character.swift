@@ -34,7 +34,12 @@ struct Character: Codable {
 
 struct Thumbnail: Codable {
     var path: URL
+    var ext: String
     
+    enum CodingKeys: String, CodingKey {
+        case path
+        case ext = "extension"
+    }
 }
 
 

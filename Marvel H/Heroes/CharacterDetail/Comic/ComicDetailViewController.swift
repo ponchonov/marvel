@@ -112,7 +112,7 @@ class ComicDetailViewController: UIViewController {
                    ])
             
             comicTitle.text = comic.title
-            comicImage.downloadImageFrom(urlImage: comic.thumbnail.path, imageMode: .scaleAspectFit)
+            comicImage.downloadImageFrom(thumbnail: comic.thumbnail, imageMode: .scaleAspectFit)
             comicDescription.text = comic.description != "" ? comic.description:"No description"
         }
         

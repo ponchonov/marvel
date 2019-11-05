@@ -43,7 +43,7 @@ class ComicCollectionViewCell: UICollectionViewCell {
         guard let comic = self.comic else {return}
         
         comicName.text = comic.title
-        comicImage.downloadImageFrom(urlImage: comic.thumbnail.path, imageMode: .scaleAspectFill)
+        comicImage.downloadImageFrom(thumbnail: comic.thumbnail, imageMode: .scaleAspectFill)
     }
     
     func setUpView()  {

@@ -42,7 +42,7 @@ class CharacterCollectionViewCell: UICollectionViewCell {
     func setUpData() {
         guard let character = self.character else {return}
         characterName.text = character.name
-        characterImage.downloadImageFrom(urlImage: character.thumbnail.path, imageMode: .scaleToFill)
+        characterImage.downloadImageFrom(thumbnail: character.thumbnail, imageMode: .scaleToFill)
     }
     
     func setUpView()  {
