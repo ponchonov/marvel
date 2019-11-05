@@ -44,7 +44,7 @@ class CharacterCollectionViewCell: UICollectionViewCell {
         
         characterName.text = character.name
         
-        characterImage.setImageWith(imageUrl: character.thumbnail.path)
+        characterImage.downloadImageFrom(urlImage: character.thumbnail.path, imageMode: .scaleAspectFit)
     }
     
     func setUpView()  {

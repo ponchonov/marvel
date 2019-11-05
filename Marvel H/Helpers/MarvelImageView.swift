@@ -9,10 +9,11 @@
 import UIKit
 import ImageIO
 
-let imageCache = NSCache<AnyObject, AnyObject>()
 
 class MarvelImageView: UIView {
     
+    let imageCache = NSCache<NSString, AnyObject>()
+
     var image:UIImage? {
         didSet {
             self.marvelImageView.image = self.image
@@ -65,37 +66,36 @@ class MarvelImageView: UIView {
         ])
     }
     
-    func setImageWith(imageUrl:URL) {
+    
+    // MARK: - Properties
+    
+    var imageURLString: String?
+    
+    func downloadImageFrom(urlImage: URL, imageMode: UIView.ContentMode) {
+        
+        let url = urlImage.appendingPathComponent("portrait_xlarge.jpg")
+        
+        self.activityIndicator.startAnimating()
         self.image = nil
-        self.activityIndicator.stopAnimating()
-
-        let key = imageUrl.lastPathComponent
-        let url = imageUrl.appendingPathComponent("portrait_xlarge.jpg")
-        if let cachedImage = imageCache.object(forKey: key as NSString) as? UIImage {
+        contentMode = imageMode
+        if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) as? UIImage {
             self.image = cachedImage
+            self.activityIndicator.stopAnimating()
         } else {
-            
-            DispatchQueue.main.async {
-                self.activityIndicator.startAnimating()
-                
-                DispatchQueue.global(qos: .background).async {
-                    do {
-                        let data = try Data(contentsOf: url)
-                        DispatchQueue.main.async {
-                            if let image = UIImage(data: data) {
-                                imageCache.setObject(image, forKey: key as NSString)
-                                self.image = image
-                            }
-                            self.activityIndicator.stopAnimating()
-                        }
-                    } catch (let e) {
-                        print(e)
-                        DispatchQueue.main.async {
-                            self.activityIndicator.stopAnimating()
-                        }
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                guard let data = data, error == nil else {
+                    self.activityIndicator.stopAnimating()
+                    return }
+                DispatchQueue.main.async {
+                    if let imageToCache = UIImage(data: data) {
+                        
+                        self.imageCache.setObject(imageToCache, forKey: url.absoluteString as NSString)
+                        self.image = imageToCache
+                        self.activityIndicator.stopAnimating()
                     }
                 }
-            }
+            }.resume()
         }
     }
 }
+
