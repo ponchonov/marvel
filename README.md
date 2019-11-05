@@ -3,7 +3,7 @@ Here is where you can see your favorites heroes and the comics where they appear
 
 # Home Screen!
 
- ![iPad](https://p0.f0.n0.cdn.getcloudapp.com/items/d5ubge1e/Screen+Recording+2019-11-05+at+11.03+AM.gif?v=db52ac8bf70e896e4901dc813e15ad33)
+ ![iPad](https://p0.f0.n0.cdn.getcloudapp.com/items/geuYEr7m/Image+2019-11-05+at+11.08.56+AM.png?v=c1e02e09c3f0dabd17f2119a64f75b54)
  
- ![iPhone](https://p0.f0.n0.cdn.getcloudapp.com/items/KouQ9e7G/Screen+Recording+2019-11-05+at+11.04+AM.gif?v=8b484d2a4b6ccc1f177bc25678fa2eb8)
+ ![iPhone](https://p0.f0.n0.cdn.getcloudapp.com/items/bLuplGyL/Image+2019-11-05+at+11.08.18+AM.png?v=51d2258fe6d3c04ed2b6ed2c040fb683)
 
