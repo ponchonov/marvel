@@ -66,7 +66,6 @@ class MarvelImageView: UIView {
         ])
     }
     
-    
     // MARK: - Properties
     
     var imageURLString: String?

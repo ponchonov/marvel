@@ -88,6 +88,8 @@ class API: NSObject {
             parameters["offset"] = "\(currentPage * heroesPerPage)"
             
             print("current page:", currentPage)
+        } else {
+            currentPage = 0
         }
         
         apiCallWith(request: request, parameters: parameters) { (data, response, error) in

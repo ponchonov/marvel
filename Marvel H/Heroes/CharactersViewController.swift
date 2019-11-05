@@ -9,11 +9,12 @@
 import UIKit
 
 class CharactersViewController: UIViewController {
-
+    
     let cellIdentifier = "characterCell"
     var characters:[Character] = [Character]()
     var isDataLoading = true
-    
+    var refreshControl = UIRefreshControl()
+
     
     lazy var collectionView:UICollectionView = {
         let l = UICollectionViewFlowLayout()
@@ -28,31 +29,27 @@ class CharactersViewController: UIViewController {
         c.dataSource = self
         c.delegate = self
         c.backgroundColor = .white
-
+        
         return c
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        API.shared.getHeroes(heroesPerPage: UIDevice.current.userInterfaceIdiom == .pad ? 20:10) { (heroes, error) in
-            self.characters = heroes
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-                self.isDataLoading = false
-            }
-        }
+        getInitialData()
     }
-
-
+    
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         setUpView()
         self.title = "Heroes"
     }
     override func viewDidAppear(_ animated: Bool) {
-    setupLayout()
-
+        setupLayout()
+        navigationController?.navigationBar.barTintColor = UIColor(red:0.86, green:0.38, blue:0.33, alpha:1.00)
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.isOpaque = true
         
     }
     
@@ -62,6 +59,12 @@ class CharactersViewController: UIViewController {
     
     func setUpView()  {
         self.view.backgroundColor = .white
+        
+        self.collectionView.alwaysBounceVertical = true
+        self.refreshControl.tintColor = UIColor.red
+        self.refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
+        self.collectionView.addSubview(refreshControl)
+        
         
         [collectionView].forEach(view.addSubview)
         
@@ -79,12 +82,23 @@ class CharactersViewController: UIViewController {
             guard !self.isDataLoading else { return }
             self.isDataLoading = true
             
-            API.shared.getHeroes(heroesPerPage: 10, nextPage: true) { (characters, error) in
+            API.shared.getHeroes(heroesPerPage: UIDevice.current.userInterfaceIdiom == .pad ? 20:10, nextPage: true) { (characters, error) in
                 self.characters.append(contentsOf: characters)
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                     self.isDataLoading = false
                 }
+            }
+        }
+    }
+    
+    func getInitialData()  {
+        API.shared.getHeroes(heroesPerPage: UIDevice.current.userInterfaceIdiom == .pad ? 20:10) { (heroes, error) in
+            self.characters = heroes
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                self.isDataLoading = false
+                self.stopRefresher()
             }
         }
     }
@@ -100,7 +114,7 @@ class CharactersViewController: UIViewController {
             }
         }
         itemSize = CGSize(width: UIScreen.main.bounds.width/numberOfColumns - 10 , height: 500)
-
+        
         let l = UICollectionViewFlowLayout()
         
         l.itemSize = itemSize!
@@ -114,6 +128,15 @@ class CharactersViewController: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         setupLayout()
     }
+    
+    @objc func loadData() {
+       refreshControl.beginRefreshing()
+        getInitialData()
+     }
+
+    func stopRefresher() {
+       refreshControl.endRefreshing()
+     }
 }
 
 
