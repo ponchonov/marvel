@@ -25,6 +25,7 @@ class CharacterDetailViewController: UIViewController {
         c.register(ComicCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         c.dataSource = self
         c.backgroundColor = .white
+        c.delegate = self
         return c
     }()
     
@@ -164,6 +165,16 @@ extension CharacterDetailViewController: UICollectionViewDataSource {
         cell.comic = comics[indexPath.row]
         
         return cell
+    }
+}
+
+extension CharacterDetailViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let comic = comics[indexPath.row]
+        let vc = ComicDetailViewController(comic: comic)
+        
+        self.show(vc,sender: nil)
     }
 }
 

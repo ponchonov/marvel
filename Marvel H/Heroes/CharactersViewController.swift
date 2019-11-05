@@ -28,7 +28,7 @@ class CharactersViewController: UIViewController {
         c.register(CharacterCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         c.dataSource = self
         c.delegate = self
-        c.backgroundColor = .white
+        c.backgroundColor = UIColor(red:0.89, green:0.90, blue:0.90, alpha:1.00)
         
         return c
     }()
